@@ -36,7 +36,8 @@ plotly
 polars                    
 protobuf                  
 pyarrow                   
-pycparser                                   
+pycparser     
+pydantic
 pydantic_core             
 pydeck                    
 Pygments                  
