@@ -1,0 +1,23 @@
+remove sliders from all inputs, try something else.
+add emojis after text
+add multiselect to air travel
+add labels of pie chart next to it or below it
+
+#ideas
+add questions and quizes(to earn coins)
+give personalised advices
+add a bar chart to show progress over last weeks
+add a link to see previous history of footprint calculation
+allow users to set carbon emmision goals
+add urls to carbon emmision compensateing websites and website that show details about it.
+add chatbot.
+redeem page -> 5-6 vouchers
+
+output page--------- 
+    1. results with avg and coins earned
+    2. graphical analysis
+    3. suggestions
+    4. chatbot
+
+#changes
+installed plotly.express
