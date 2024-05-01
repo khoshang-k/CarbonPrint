@@ -186,7 +186,7 @@ class __login__:
         """
         with st.form("Forgot Password Form"):
             email_forgot_passwd = st.text_input("Email", placeholder= 'Please enter your email')
-            email_exists_check, username_forgot_passwd = check_email_exists(email_forgot_passwd)
+            email_exists_check = check_email_exists(email_forgot_passwd)
 
             st.markdown("###")
             forgot_passwd_submit_button = st.form_submit_button(label = 'Get Password')
