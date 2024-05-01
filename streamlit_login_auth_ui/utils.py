@@ -140,7 +140,7 @@ def check_email_exists(email_forgot_passwd: str):
     if alldoc!=None:   
         total = alldoc['Username']
         print(total) 
-        return True   
+        return total   
     else:
         return False
     # with open("secret_auth.json", "r") as auth_json:
