@@ -3,7 +3,6 @@ from streamlit_login_auth_ui.widgets import __login__
 import models
 import plotly.express as px
 import polars as pl
-import cv2
 from PIL import Image
 import os
 import pandas as pd
