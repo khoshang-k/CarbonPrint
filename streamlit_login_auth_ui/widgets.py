@@ -10,7 +10,6 @@ from streamlit_login_auth_ui.utils import check_valid_name
 from streamlit_login_auth_ui.utils import check_valid_email
 from streamlit_login_auth_ui.utils import check_unique_email
 from streamlit_login_auth_ui.utils import check_unique_usr
-from streamlit_login_auth_ui.utils import register_new_usr
 from streamlit_login_auth_ui.utils import check_email_exists
 from streamlit_login_auth_ui.utils import generate_random_passwd
 from streamlit_login_auth_ui.utils import send_passwd_in_email
@@ -151,11 +150,7 @@ class __login__:
             sign_up_submit_button = st.form_submit_button(label = 'Register')
 
             if sign_up_submit_button:
-                client = MongoClient('mongodb+srv://carboncalculator2024:zipzcwaQu1UnYTT5@carbonfootprint.febn7uz.mongodb.net/?retryWrites=true&w=majority&appName=carbonfootprint')
-                db = client['carbon_footprint']
-                collection = db['signup']
-                
-
+            
                 if valid_name_check == False:
                     st.error("Please enter a valid name!")
 
@@ -175,10 +170,12 @@ class __login__:
                     if valid_email_check == True:
                         if unique_email_check == True:
                             if unique_username_check == True:
+                                client = MongoClient('mongodb+srv://carboncalculator2024:zipzcwaQu1UnYTT5@carbonfootprint.febn7uz.mongodb.net/?retryWrites=true&w=majority&appName=carbonfootprint')
+                                db = client['carbon_footprint']
+                                collection = db['signup']
                                 document = {'Name':name_sign_up,'Email':email_sign_up,'Username':username_sign_up,'Password':password_sign_up}
                                 collection.insert_one(document)
                                 st.success("Registration Successful!")
-                                st.balloons()
                                 welcome_message(self.auth_token,email_sign_up,username_sign_up,self.company_name)
 
 
@@ -189,8 +186,11 @@ class __login__:
         """
         with st.form("Forgot Password Form"):
             email_forgot_passwd = st.text_input("Email", placeholder= 'Please enter your email')
-            email_exists_check, username_forgot_passwd = check_email_exists(email_forgot_passwd)
-
+            username_forgot_passwd = check_email_exists(email_forgot_passwd)
+            if username_forgot_passwd=="False":
+                email_exists_check=False
+            else:
+                email_exists_check=True
             st.markdown("###")
             forgot_passwd_submit_button = st.form_submit_button(label = 'Get Password')
 
@@ -212,7 +212,11 @@ class __login__:
         """
         with st.form("Reset Password Form"):
             email_reset_passwd = st.text_input("Email", placeholder= 'Please enter your email')
-            email_exists_check, username_reset_passwd = check_email_exists(email_reset_passwd)
+            username_reset_passwd = check_email_exists(email_reset_passwd)
+            if username_reset_passwd=="False":
+                email_exists_check=False
+            else:
+                email_exists_check=True
 
             current_passwd = st.text_input("Temporary Password", placeholder= 'Please enter the password you received in the email')
             current_passwd_check = check_current_passwd(email_reset_passwd, current_passwd)
@@ -339,5 +343,4 @@ class __login__:
             self.hide_footer()
         
         return st.session_state['LOGGED_IN']
-
 
