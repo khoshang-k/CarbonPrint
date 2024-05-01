@@ -61,12 +61,12 @@ def check_valid_email(email_sign_up: str) -> bool:
     return False
 
 
-def check_unique_email(email_sign_up: str,username: str) -> bool:
+def check_unique_email(email_sign_up: str,) -> bool:
     """
     Checks if the email already exists (since email needs to be unique).
     """
     try:
-        alldoc = collection.find({ '$or': [{'Email': email_sign_up},{'Username': username}]})
+        alldoc = collection.find({'Email': email_sign_up})
         # total = alldoc["Email"]
         # print(total)
         if alldoc==None:
