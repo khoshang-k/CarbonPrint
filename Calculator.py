@@ -39,7 +39,7 @@ if LOGGED_IN == True:
    bus_travel=0
    mealperday=0
 
-     st.title(f"Welcome {username},")
+   st.title(f"Welcome {username},")
    st.title("Carbon Calculator")
 
    month=st.selectbox("Select Month",['January','February','March','April','May','June','July','August','September','October','November','December'])
