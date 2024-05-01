@@ -18,7 +18,7 @@ collection = db['emission_data']
 
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
-@st.cache_resource
+@st.cache
 def load_image(image_file):
    img = Image.open(image_file)
    return img
