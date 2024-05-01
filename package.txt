@@ -1,0 +1,2 @@
+tessearct-ocr
+tesseract-ocr-eng
