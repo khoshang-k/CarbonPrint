@@ -12,7 +12,10 @@ from experiment2 import ScanImage2
 from pymongo import MongoClient
 
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+client = MongoClient('mongodb+srv://carboncalculator2024:zipzcwaQu1UnYTT5@carbonfootprint.febn7uz.mongodb.net/?retryWrites=true&w=majority&appName=carbonfootprint')
 
+db = client['carbon_footprint']
+collection = db['emission_data']
 @st.cache
 def load_image(image_file):
    img = Image.open(image_file)
