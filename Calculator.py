@@ -1,7 +1,6 @@
 from wsgiref.handlers import format_date_time
 import streamlit as st
 from streamlit_login_auth_ui.widgets import __login__
-import models
 import plotly.express as px
 import polars as pl
 from PIL import Image
@@ -12,9 +11,14 @@ import pytesseract
 from experiment2 import ScanImage2
 from pymongo import MongoClient
 
+client = MongoClient('mongodb+srv://carboncalculator2024:zipzcwaQu1UnYTT5@carbonfootprint.febn7uz.mongodb.net/?retryWrites=true&w=majority&appName=carbonfootprint')
+
+db = client['carbon_footprint']
+collection = db['emission_data']
+
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
-@st.cache
+@st.cache_resource
 def load_image(image_file):
    img = Image.open(image_file)
    return img
@@ -40,12 +44,17 @@ if LOGGED_IN == True:
    bus_travel=0
    mealperday=0
 
-   user = models.get_user(username)
-   st.title(f"Welcome {user.username},")
+   st.title(f"Welcome {username},")
    st.title("Carbon Calculator")
-
+   
    month=st.selectbox("Select Month",['January','February','March','April','May','June','July','August','September','October','November','December'])
    year=st.selectbox("Select year",['2020','2021','2022','2023','2024','2025','2026','2027','2028','2029','2030'],index=4)
+   
+   alldoc = collection.find_one({'Username':username,'Month':month,'Year':year}, {'Total':1,'_id':0})
+   if alldoc!=None:
+      st.toast("Data already present for current month and year") 
+          
+   
    region=st.selectbox("Select",['Urban','Rural'])
 
    val = st.number_input('⚡Electricity used per month(KWh)', value = 0,min_value=0,max_value=1000)
@@ -179,15 +188,6 @@ if LOGGED_IN == True:
       fig.update_traces(textposition='inside', textinfo='percent+label')
       st.plotly_chart(fig)
       
-      models.add_emission(emission_data, user)
-      try:
-         emission = models.get_emission(username, month, year)
-
-         for key, value in emission.__dict__.items():
-            print(f'{key}: {value}')
-      except AttributeError:
-         st.write("Invalid entry")
-
       col1, col2=st.columns(2)
       with col1:
          st.info(f"Electricity : {val} tonnes of CO₂ produced")
