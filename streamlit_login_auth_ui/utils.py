@@ -5,7 +5,12 @@ import secrets
 from argon2 import PasswordHasher
 import requests
 import models
+from pymongo import MongoClient
 
+client = MongoClient('mongodb+srv://carboncalculator2024:zipzcwaQu1UnYTT5@carbonfootprint.febn7uz.mongodb.net/?retryWrites=true&w=majority&appName=carbonfootprint')
+
+db = client['carbon_footprint']
+collection = db['signup']
 ph = PasswordHasher()
 
 def check_usr_pass(username: str, password: str) -> bool:
