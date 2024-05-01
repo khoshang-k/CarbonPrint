@@ -10,7 +10,6 @@ from streamlit_login_auth_ui.utils import check_valid_name
 from streamlit_login_auth_ui.utils import check_valid_email
 from streamlit_login_auth_ui.utils import check_unique_email
 from streamlit_login_auth_ui.utils import check_unique_usr
-from streamlit_login_auth_ui.utils import register_new_usr
 from streamlit_login_auth_ui.utils import check_email_exists
 from streamlit_login_auth_ui.utils import generate_random_passwd
 from streamlit_login_auth_ui.utils import send_passwd_in_email
