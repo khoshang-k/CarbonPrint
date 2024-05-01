@@ -50,9 +50,9 @@ if LOGGED_IN == True:
    month=st.selectbox("Select Month",['January','February','March','April','May','June','July','August','September','October','November','December'])
    year=st.selectbox("Select year",['2020','2021','2022','2023','2024','2025','2026','2027','2028','2029','2030'],index=4)
    
-   alldoc = collection.find_one({'Username':username,'Month':month,'Year':year}, {'Total':1,'_id':0})
-   if alldoc!=None:
-      st.toast("Data already present for current month and year") 
+   # alldoc = collection.find_one({'Username':username,'Month':month,'Year':year}, {'Total':1,'_id':0})
+   # if alldoc!=None:
+      # st.toast("Data already present for current month and year") 
           
    
    region=st.selectbox("Select",['Urban','Rural'])
