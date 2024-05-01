@@ -1,12 +1,8 @@
-from wsgiref.handlers import format_date_time
 import streamlit as st
 from streamlit_login_auth_ui.widgets import __login__
 import models
-import numpy as np
 import plotly.express as px
 import polars as pl
-from models import User, Emission
-import matplotlib.pyplot as plt
 import cv2
 from PIL import Image
 import os
