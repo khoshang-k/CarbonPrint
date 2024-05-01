@@ -150,15 +150,7 @@ class __login__:
             sign_up_submit_button = st.form_submit_button(label = 'Register')
 
             if sign_up_submit_button:
-                client = MongoClient('mongodb+srv://carboncalculator2024:zipzcwaQu1UnYTT5@carbonfootprint.febn7uz.mongodb.net/?retryWrites=true&w=majority&appName=carbonfootprint')
-
-                db = client['carbon_footprint']
-                collection = db['signup']
-                document = {'Name':name_sign_up,'Email':email_sign_up,'Username':username_sign_up,'Password':password_sign_up}
-                collection.insert_one(document)
-                st.success("Successfully Added")
-                st.balloons()
-
+            
                 if valid_name_check == False:
                     st.error("Please enter a valid name!")
 
@@ -178,6 +170,11 @@ class __login__:
                     if valid_email_check == True:
                         if unique_email_check == True:
                             if unique_username_check == True:
+                                client = MongoClient('mongodb+srv://carboncalculator2024:zipzcwaQu1UnYTT5@carbonfootprint.febn7uz.mongodb.net/?retryWrites=true&w=majority&appName=carbonfootprint')
+                                db = client['carbon_footprint']
+                                collection = db['signup']
+                                document = {'Name':name_sign_up,'Email':email_sign_up,'Username':username_sign_up,'Password':password_sign_up}
+                                collection.insert_one(document)
                                 register_new_usr(name_sign_up, email_sign_up, username_sign_up, password_sign_up)
                                 st.success("Registration Successful!")
                                 welcome_message(self.auth_token,email_sign_up,username_sign_up,self.company_name)
