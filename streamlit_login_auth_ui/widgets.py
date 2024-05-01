@@ -216,7 +216,11 @@ class __login__:
         """
         with st.form("Reset Password Form"):
             email_reset_passwd = st.text_input("Email", placeholder= 'Please enter your email')
-            email_exists_check, username_reset_passwd = check_email_exists(email_reset_passwd)
+            username_reset_passwd = check_email_exists(email_reset_passwd)
+            if username_reset_passwd=="False":
+                email_exists_check=False
+            else:
+                email_exists_check=True
 
             current_passwd = st.text_input("Temporary Password", placeholder= 'Please enter the password you received in the email')
             current_passwd_check = check_current_passwd(email_reset_passwd, current_passwd)
