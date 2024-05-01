@@ -1,16 +1,16 @@
 import re
-import json
 from trycourier import Courier
 import secrets
 from argon2 import PasswordHasher
 import requests
-import models
+import json
 from pymongo import MongoClient
 
 client = MongoClient('mongodb+srv://carboncalculator2024:zipzcwaQu1UnYTT5@carbonfootprint.febn7uz.mongodb.net/?retryWrites=true&w=majority&appName=carbonfootprint')
 
 db = client['carbon_footprint']
 collection = db['signup']
+
 ph = PasswordHasher()
 
 def check_usr_pass(username: str, password: str) -> bool:
@@ -61,20 +61,29 @@ def check_valid_email(email_sign_up: str) -> bool:
     return False
 
 
-def check_unique_email(email_sign_up: str) -> bool:
+def check_unique_email(email_sign_up: str,) -> bool:
     """
     Checks if the email already exists (since email needs to be unique).
     """
-    authorized_user_data_master = list()
-    with open("_secret_auth_.json", "r") as auth_json:
-        authorized_users_data = json.load(auth_json)
+    try:
+        alldoc = collection.find({'Email': email_sign_up})
+        # total = alldoc["Email"]
+        # print(total)
+        if alldoc==None:
+            return True
+        return False  
+    except:
+        return True
+    # authorized_user_data_master = list()
+    # with open("secret_auth.json", "r") as auth_json:
+    #     authorized_users_data = json.load(auth_json)
 
-        for user in authorized_users_data:
-            authorized_user_data_master.append(user['email'])
+    #     for user in authorized_users_data:
+    #         authorized_user_data_master.append(user['email'])
 
-    if email_sign_up in authorized_user_data_master:
-        return False
-    return True
+    # if email_sign_up in authorized_user_data_master:
+    #     return False
+    # return True
 
 
 def non_empty_str_check(username_sign_up: str) -> bool:
@@ -98,66 +107,49 @@ def check_unique_usr(username_sign_up: str):
     Checks if the username already exists (since username needs to be unique),
     also checks for non - empty username.
     """
-    authorized_user_data_master = list()
-    with open("_secret_auth_.json", "r") as auth_json:
-        authorized_users_data = json.load(auth_json)
-
-        for user in authorized_users_data:
-            authorized_user_data_master.append(user['username'])
-
-    if username_sign_up in authorized_user_data_master:
-        return False
-
-    non_empty_check = non_empty_str_check(username_sign_up)
-
-    if non_empty_check == False:
-        return None
-    return True
-
-
-def register_new_usr(name_sign_up: str, email_sign_up: str, username_sign_up: str, password_sign_up: str) -> None:
-    """
-    Saves the information of the new user in the _secret_auth.json file.
-    """
-    new_usr_data = {'username': username_sign_up, 'name': name_sign_up, 'email': email_sign_up, 'password': ph.hash(password_sign_up)}
-
-    models.add_user(new_usr_data)
-
-    with open("_secret_auth_.json", "r") as auth_json:
-        authorized_user_data = json.load(auth_json)
-
-    with open("_secret_auth_.json", "w") as auth_json_write:
-        authorized_user_data.append(new_usr_data)
-        json.dump(authorized_user_data, auth_json_write)
-
-
-def check_username_exists(user_name: str) -> bool:
-    """
-    Checks if the username exists in the _secret_auth.json file.
-    """
-    authorized_user_data_master = list()
-    with open("_secret_auth_.json", "r") as auth_json:
-        authorized_users_data = json.load(auth_json)
-
-        for user in authorized_users_data:
-            authorized_user_data_master.append(user['username'])
-
-    if user_name in authorized_user_data_master:
+    try:
+        alldoc = collection.find_one({'Username':username_sign_up,}, {'Name':1,'_id':0})
+        total = alldoc["Name"]
+        return False    
+    except:
         return True
-    return False
+    # authorized_user_data_master = list()
+    # with open("secret_auth.json", "r") as auth_json:
+    #     authorized_users_data = json.load(auth_json)
+
+    #     for user in authorized_users_data:
+    #         authorized_user_data_master.append(user['username'])
+
+    # if username_sign_up in authorized_user_data_master:
+    #     return False
+
+    # non_empty_check = non_empty_str_check(username_sign_up)
+
+    # if non_empty_check == False:
+    #     return None
+    # return True
+
 
 
 def check_email_exists(email_forgot_passwd: str):
     """
     Checks if the email entered is present in the _secret_auth.json file.
     """
-    with open("_secret_auth_.json", "r") as auth_json:
-        authorized_users_data = json.load(auth_json)
+    alldoc = collection.find_one({'Email':email_forgot_passwd}, {'Username':1,'_id':0})
 
-        for user in authorized_users_data:
-            if user['email'] == email_forgot_passwd:
-                    return True, user['username']
-    return False, None
+    if alldoc!=None:   
+        total = alldoc['Username']
+        print(total) 
+        return total   
+    else:
+        return False
+    # with open("secret_auth.json", "r") as auth_json:
+    #     authorized_users_data = json.load(auth_json)
+
+    #     for user in authorized_users_data:
+    #         if user['email'] == email_forgot_passwd:
+    #                 return True, user['username']
+    # return False, None
 
 
 def generate_random_passwd() -> str:
@@ -215,14 +207,8 @@ def change_passwd(email_: str, random_password: str) -> None:
     """
     Replaces the old password with the newly generated password.
     """
-    with open("_secret_auth_.json", "r") as auth_json:
-        authorized_users_data = json.load(auth_json)
+    collection.update_one({'Email':email_},{'$set': {"Password": random_password}})
 
-    with open("_secret_auth_.json", "w") as auth_json_:
-        for user in authorized_users_data:
-            if user['email'] == email_:
-                user['password'] = ph.hash(random_password)
-        json.dump(authorized_users_data, auth_json_)
 
 
 def check_current_passwd(email_reset_passwd: str, current_passwd: str) -> bool:
@@ -230,14 +216,14 @@ def check_current_passwd(email_reset_passwd: str, current_passwd: str) -> bool:
     Authenticates the password entered against the username when
     resetting the password.
     """
-    with open("_secret_auth_.json", "r") as auth_json:
-        authorized_users_data = json.load(auth_json)
+    alldoc = collection.find_one({'Email': email_reset_passwd ,'Password': current_passwd },{'Password':1,'_id':0})
+    
 
-        for user in authorized_users_data:
-            if user['email'] == email_reset_passwd:
-                try:
-                    if ph.verify(user['password'], current_passwd) == True:
-                        return True
-                except:
-                    pass
+    try:
+        
+        if alldoc != None:
+            if alldoc["Password"] == current_passwd:
+                return True
+    except:
+        pass
     return False
